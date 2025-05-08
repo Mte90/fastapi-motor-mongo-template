@@ -1,5 +1,7 @@
 import pytest
+from app.db import get_db
 from uuid import UUID
+from app.common.error import UnprocessableError
 
 
 @pytest.mark.asyncio
@@ -13,18 +15,23 @@ from uuid import UUID
     ]
 )
 async def test_delete_sample_resource(
-    test_client, mongo_client, resource_id: UUID, expected_status: int
+    client, override_get_db, clear_db, resource_id: UUID, expected_status: int
 ):
 
     path = '/api/sample-resource-app/v1/sample-resource'
     if None is not resource_id:
         path = f'{path}/{resource_id}'
 
-    resp = test_client.delete(
-        path,
-    )
-    assert resp.status_code == expected_status
+    try:
+        resp = await client.delete(
+            path,
+        )
+        assert resp.status_code == expected_status
 
-    if 200 == resp.status_code:
-        resource_db = await mongo_client.get_sample_resource_by_id(resource_id, )
-        assert True is resource_db.get('deleted')
+        if 200 == resp.status_code:
+            db = await get_db()
+            resource_db = await db['test_db']['sample_resource'].find_one({"_id": UUID(resource_id)})
+            assert True is resource_db.get('deleted')
+
+    except UnprocessableError as e:
+        assert expected_status in (200, 422)

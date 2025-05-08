@@ -18,7 +18,7 @@ handlers:
     filename: app.log
     level: $LOG_LEVEL
     formatter: simple
-    filters: [sensitive_info]
+    filters: []
 
 filters:
   sensitive_info:

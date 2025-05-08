@@ -1,9 +1,6 @@
 # Boilerplate for FastAPI, MongoDB, Motor Projects
-![Python3.11.2](https://img.shields.io/badge/Python-3.11.2-brightgreen.svg?style=flat-square)
-![MongoDB](https://img.shields.io/badge/MongoDB-6.0-brightgreen.svg?style=flat-square)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.92.0-brightgreen.svg?style=flat-square)
-![Motor](https://img.shields.io/badge/Motor-3.1.1-brightgreen.svg?style=flat-square)
 
+Updated for latest version and works :-D
 
 ## Features
 A new backend project created with this boilerplate provides:
@@ -12,7 +9,6 @@ A new backend project created with this boilerplate provides:
 - [x] API documentation with [Swagger UI](https://swagger.io/tools/swagger-ui/).
 - [x] API testing with [pytest](https://docs.pytest.org/en/7.1.x/) and [pytest-asyncio](https://github.com/pytest-dev/pytest-asyncio).
 - [x] Dockerfile for containerization and docker-compose support.
-- [x] Easy creation of new backend services with [cookiecutter](https://github.com/cookiecutter/cookiecutter).
 - [x] Easy package menagement with [Poetry](https://python-poetry.org/).
 - [x] Health API for service health checking.
 - [x] Easy configuration with environment variables.
@@ -27,6 +23,11 @@ A new backend project created with this boilerplate provides:
 
 ## Getting Started
 
+```
+poetry install --with dev # for dev stuff
+poetry install # for production
+```
+
 ### Edit Environment Variables
 Create and edit the `.env` file within the project folder.
 
@@ -34,7 +35,6 @@ Create and edit the `.env` file within the project folder.
 ```sh
 make test
 ```
-(This may not work at this time. Please use docker-compose instead.)
 
 ### Build Docker Image
 ```sh
@@ -51,14 +51,6 @@ make docker-compose-down
 ```sh
 make dev
 ```
-This will create a MongoDB container as well.
-(This may not work at this time. Please use docker-compose instead.)
 
 ### Check Swagger API Document
 Go to ` http://localhost:8888/docs`.
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you.
-
-## Credit: 
-Forked from https://github.com/klee1611/cookiecutter-fastapi-mongo

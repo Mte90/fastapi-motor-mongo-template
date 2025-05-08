@@ -1,30 +1,34 @@
 import pytest
-
+from app.db import get_db
+from uuid import UUID
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "name, expected_status",
     [
-        ('John Doe', 201),
-        (None, 400),
+        (None, 422),
+        ('John Doe', 201)
     ]
 )
 async def test_create_sample_resource(
-    test_client, mongo_client, name: str, expected_status: int
+    client, override_get_db, clear_db, name: str, expected_status: int
 ):
     req_json = {}
-    if None is not name:
+    if name is not None:
         req_json["name"] = name
 
-    resp = test_client.post(
+    resp = await client.post(
         '/api/sample-resource-app/v1/sample-resource',
         json=req_json
     )
+
     assert resp.status_code == expected_status
 
     if 201 == expected_status:
         assert 'id' in resp.json()
         resource_id = resp.json().get('id')
-        resource_db = await mongo_client.get_sample_resource_by_id(resource_id, )
+
+        db = await get_db()
+        resource_db = await db['test_db']['sample_resource'].find_one({"_id": UUID(resource_id)})
         assert resource_db.get('name') == name
-        assert False is resource_db.get('deleted')
+        assert not resource_db.get('deleted')

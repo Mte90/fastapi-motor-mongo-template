@@ -13,7 +13,6 @@ from app.api.v1 import sample_resource as sample_resource_v1
 setup_logging()
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
 # DB Events
 app.add_event_handler("startup", Config.check_app_settings_on_none)

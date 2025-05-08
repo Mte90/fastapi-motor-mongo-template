@@ -1,8 +1,9 @@
-from pydantic import constr
+from pydantic import StringConstraints, Field
 from datetime import datetime
 from uuid import UUID
 
 from .mongo_model import MongoModel
+from typing_extensions import Annotated
 
 
 def to_lower_camel_case(string: str) -> str:
@@ -11,11 +12,14 @@ def to_lower_camel_case(string: str) -> str:
 
 
 class SampleResourceBase(MongoModel):
-    name: constr(max_length=255)
+    name: Annotated[str, StringConstraints(max_length=255)]
 
 
 class SampleResource(SampleResourceBase):
-    id: UUID
+    model_config = {
+        "populate_by_name": True
+    }
+    id: UUID = Field(alias="_id")
     create_time: datetime
     update_time: datetime
     deleted: bool

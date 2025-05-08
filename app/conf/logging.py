@@ -17,7 +17,11 @@ class SensitiveInfoFilter(logging.Filter):
         """
         Check if a log record contains sensitive information, and if so, mask it.
         """
-        msg = record.getMessage()
+        try:
+            msg = record.getMessage()
+        except TypeError:
+            msg = str(record.msg)
+            record.args = ()
         for word in self.sensitive_words:
             msg = msg.replace(word, "*" * len(word))
         record.msg = msg
@@ -27,6 +31,13 @@ class SensitiveInfoFilter(logging.Filter):
 def setup_logging():
     log_config = create_log_config('app/conf/logging.yaml')
     logging.config.dictConfig(log_config)
+    logging.getLogger('asyncio').setLevel(logging.WARNING)
+    logging.getLogger('uvicorn').setLevel(logging.WARNING)
+    logging.getLogger('uvicorn.error').setLevel(logging.WARNING)
+    logging.getLogger('gunicorn').setLevel(logging.WARNING)
+    logging.getLogger('gunicorn.error').setLevel(logging.WARNING)
+    logging.getLogger('pymongo').setLevel(logging.WARNING)
+    logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
 def create_log_config(log_path: str) -> dict:

@@ -13,6 +13,9 @@ async def get_db() -> AsyncIOMotorClient:
     db_name = Config.app_settings.get('db_name')
     return db_client[db_name]
 
+async def get_db_client() -> AsyncIOMotorClient:
+    global db_client
+    return db_client
 
 async def connect_and_init_db():
     global db_client
@@ -23,6 +26,7 @@ async def connect_and_init_db():
             password=Config.app_settings.get('db_password'),
             maxPoolSize=Config.app_settings.get('max_db_conn_count'),
             minPoolSize=Config.app_settings.get('min_db_conn_count'),
+            authSource=Config.app_settings.get('db_name'),
             uuidRepresentation="standard",
         )
         logging.info('Connected to mongo.')
